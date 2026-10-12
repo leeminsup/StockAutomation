@@ -34,3 +34,10 @@ jobs:
     # (4) 마침내 내가 올린 파이썬 프로그램을 실행합니다!
     - name: Run script
       run: python 20_collect_ETF_info.py   # 여기에 실행할 파이썬 파일 이름을 적어주세요.
+      
+    # [여기에 추가] 생성된 엑셀 파일을 다운로드할 수 있도록 결과물로 저장합니다.
+    - name: Upload Excel Result
+      uses: actions/upload-artifact@v4
+      with:
+        name: etf-excel-result  # 다운로드 받을 압축파일의 이름 (원하는 대로 변경 가능)
+        path: "*.xlsx"          # 저장할 파일 종류 (확장자가 .xlsx인 모든 파일을 수집)
