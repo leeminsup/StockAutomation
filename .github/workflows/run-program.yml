@@ -8,6 +8,9 @@ on:
   workflow_dispatch:      # 수동으로 실행 버튼을 누르고 싶을 때 버튼을 만들어주는 옵션 (매우 유용!)
 
 # 3. 구체적으로 어떤 원격 컴퓨터에서 어떻게 실행할지 적습니다.
+permissions:
+  contents: write
+  
 jobs:
   build:
     # GitHub이 제공하는 최신 우분투 리눅스 가상 가상 환경(컴퓨터)을 빌립니다.
@@ -16,11 +19,11 @@ jobs:
     steps:
     # (1) 내가 올린 소스 코드를 가상 컴퓨터로 가져옵니다.
     - name: Check out repository code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     # (2) 가상 컴퓨터에 파이썬을 설치합니다.
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.10' # 사용할 파이썬 버전을 지정합니다.
 
@@ -35,9 +38,15 @@ jobs:
     - name: Run script
       run: python 20_collect_ETF_info.py   # 여기에 실행할 파이썬 파일 이름을 적어주세요.
       
-    # [여기에 추가] 생성된 엑셀 파일을 다운로드할 수 있도록 결과물로 저장합니다.
-    - name: Upload Excel Result
-      uses: actions/upload-artifact@v4
-      with:
-        name: etf-excel-result  # 다운로드 받을 압축파일의 이름 (원하는 대로 변경 가능)
-        path: "*.xlsx"          # 저장할 파일 종류 (확장자가 .xlsx인 모든 파일을 수집)
+    # [여기가 핵심!] 생성된 엑셀 파일을 내 저장소(Repository)로 업로드합니다.
+    - name: Commit and Push changes
+      run: |
+        # 가상 컴퓨터의 깃(Git) 유저 설정을 합니다.
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@://github.com"
+        
+        # 새로 생성되거나 변경된 모든 엑셀(.xlsx) 파일을 무대에 올립니다.
+        git add *.xlsx
+        
+        # 변경된 파일이 있을 때만 커밋하고 푸시합니다. (파일이 없으면 에러 없이 통과)
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update ETF Excel Data" && git push)
