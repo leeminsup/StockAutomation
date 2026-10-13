@@ -4,9 +4,8 @@ name: Run Python Script Automatically
 # 2. 언제 실행할지(이벤트/트리거) 결정합니다.
 on:
   schedule:
-    # 매일 한국 시간(KST) 오전 5시 (세계 표준시 UTC 20:00)에 실행 마법의 명령어
-    - cron: '01 20 * * *'
-  workflow_dispatch: # 수동 실행 버튼도 유지합니다.
+    - cron: '47 19 * * *'
+  workflow_dispatch:
 
 # 3. 구체적으로 어떤 원격 컴퓨터에서 어떻게 실행할지 적습니다.
 permissions:
