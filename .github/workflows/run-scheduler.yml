@@ -2,7 +2,7 @@ name: Run Python Script Automatically
 
 on:
   schedule:
-    - cron: '47 19 * * *'
+    - cron: '46 02 * * *'
 
 permissions:
   contents: write
