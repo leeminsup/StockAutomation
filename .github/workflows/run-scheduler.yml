@@ -1,0 +1,37 @@
+name: Run Python Script Automatically
+
+on:
+  schedule:
+    # 한국 시간 오전 4시 47분 (세계 표준시 19시 47분)
+    - cron: '47 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests pandas openpyxl beautifulsoup4 finance-datareader pykrx
+
+    - name: Run script
+      run: python 20_collect_ETF_info.py
+      
+    - name: Commit and Push changes
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "41898282+github-actions[bot]@://github.com"
+        git add *.xlsx
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update ETF Excel Data" && git push)
