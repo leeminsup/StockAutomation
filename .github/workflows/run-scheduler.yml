@@ -3,7 +3,6 @@ name: Run Python Script Automatically
 on:
   schedule:
     - cron: '47 19 * * *'
-  workflow_dispatch:
 
 permissions:
   contents: write
