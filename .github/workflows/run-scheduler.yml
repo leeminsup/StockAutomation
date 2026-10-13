@@ -2,8 +2,9 @@ name: Run Python Script Automatically
 
 on:
   schedule:
-    - cron: '47 02 * * *'
-
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+  
 permissions:
   contents: write
 
